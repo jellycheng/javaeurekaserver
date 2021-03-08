@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration scan="false" scanPeriod="600 seconds" debug="false">
+    <property name="LOG_DIR" value="/data/logs/java/euraka-server"/>
+    <property name="LOG_FILE_NAME" value="euraka-server"/>
+    <property name="logFileNamePattern" value="${LOG_FILE_NAME}_%d{yyyy-MM-dd}"/>
+    <property name="logLayoutPattern" value="%d %p [%C{1}:%L][SID:%X{sessionId}]- %m%n"/>
+    <!--<property name="logLayoutPattern" value="%m%n"/>-->
+    <!-- 控制台输出日志 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>${logLayoutPattern}</pattern>
+        </layout>
+    </appender>
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/${LOG_FILE_NAME}.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>${LOG_DIR}/${LOG_FILE_NAME}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!-- each file should be at most 100MB, keep 30 days worth of history, but at most 100GB -->
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>100GB</totalSizeCap>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>${logLayoutPattern}</pattern>
+        </encoder>
+    </appender>
+
+
+    <root level="info">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
+    </root>
+    <logger name="com.google" level="WARN" additivity="false"/>
+    <logger name="kafka.utils" level="WARN" additivity="false"/>
+    <logger name="net.rubyeye" level="WARN" additivity="false"/>
+    <logger name="com.fn.cache" level="WARN" additivity="false"/>
+    <logger name="org.apache.zookeeper" level="WARN" additivity="false"/>
+    <logger name="org.springframework.amqp.rabbit" level="WARN" additivity="false"/>
+    <logger name="org.apache.http" level="WARN" additivity="false"/>
+    <logger name="o.quartz.core" level="WARN" additivity="false"/>
+</configuration>
