@@ -41,3 +41,33 @@ eureka.client.service-url.defaultZone=http://${eureka.instance.hostname}:${serve
 
 ```
 
+## nginx配置示例
+```
+upstream sgp_eureka {
+   server 127.0.0.1:8083;
+}
+server {
+        listen 80;
+        set $app_name "eureka";
+        #注册中心：http://dev-eureka-开发者.nfangbian.com/
+        server_name  ~^dev-eureka-(?<cloud_name>\w+)\.nfangbian\.com$;
+        #server_name     dev-eureka.nfangbian.com;
+
+        access_log  /data1/logs/nginx/$app_name.$cloud_name.access.log  main;
+        error_log  /data1/logs/nginx/eureka.error.log;
+
+        location / {
+            proxy_pass http://sgp_eureka;
+            #proxy_redirect off;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header Host $host;
+        }
+
+       	proxy_intercept_errors on;
+	    error_page 500 502 503 504 = /5xx.html;
+	    error_page 404 405 = /4xx.html;
+
+}
+
+```
