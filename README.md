@@ -35,12 +35,17 @@ java eureka注册中心
 spring.application.name=eureka-server #服务名，即应用名
 server.port=8760 #监听的端口
 eureka.instance.hostname=localhost  #服务访问host地址
+eureka.instance.appname=myeurekaserver #服务名，如果没有配置这项则使用spring.application.name配置值
 eureka.environment=prod   #环境代号，不指定则默认为是test
 eureka.datacenter=mycloud01 #指定数据中心名，默认default
 eureka.client.registerWithEureka=true  #是否注册到注册中心
-eureka.client.fetchRegistry=true
+eureka.client.fetchRegistry=true #该客户端是否应从eureka服务器获取eureka注册表信息
 # 注册中心地址，多个用逗号分隔
 eureka.client.service-url.defaultZone=http://${eureka.instance.hostname}:${server.port}/eureka/
+# 关闭服务保护机制
+eureka.server.enable-self-preservation=false
+# 清理无效节点时间间隔（单位毫秒，默认是60*1000）
+eureka.server.eviction-interval-timer-in-ms=30000
 
 
 ```
